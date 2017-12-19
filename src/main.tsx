@@ -1,19 +1,15 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { App } from './components/app';
-import './style.css';
-// require("@blueprintjs/core/dist/blueprint.css");
 
-const root = document.getElementById('root');
-ReactDOM.render(
-    <App />,
-    root
-);
+render();
 
-// Hot Module Replacement API
+function render() {
+    const { App } = require('./app/app');
+    const appElement = <App title="React App" />;
+    ReactDOM.render(appElement, document.getElementById('app'));
+}
+
+// Hot Module Replacement API.
 if (module.hot) {
-    module.hot.accept('./components/app', () => {
-        const { App } = require('./components/app');
-        ReactDOM.render(<App />, root);
-    });
+    module.hot.accept('./app/app', render);
 }

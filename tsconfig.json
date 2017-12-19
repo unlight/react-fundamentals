@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "jsx": "react",
     "module": "commonjs",
     "importHelpers": true,
@@ -21,6 +21,6 @@
     ]
   },
   "include": [
-    "src/main.tsx"
+    "src/**/*.tsx"
   ]
 }
