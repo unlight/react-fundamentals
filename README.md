@@ -15,6 +15,13 @@ DEVELOPMENT
 * `env_name` environment file
 * `webpack_devtool` webpack devtool option
 
+REACT EXAMPLE APP
+---
+* https://github.com/coryhouse/react-slingshot
+* https://github.com/markerikson/project-minimek
+* https://github.com/gothinkster/react-redux-realworld-example-app
+* https://github.com/jferrettiboke/react-auth-app-example
+
 DEBUG
 ---
 ```
