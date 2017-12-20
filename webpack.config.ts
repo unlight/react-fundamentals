@@ -5,7 +5,7 @@ import * as Path from 'path';
 import pick = require('1-liners/pick');
 const ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const readPkgUp = require('read-pkg-up');
+const pkg = require('./package.json');
 const toBoolean = require('to-boolean');
 
 const sourcePath = Path.join(__dirname, 'src');
@@ -65,7 +65,7 @@ export = (options: Options = {}) => {
         entry: {
             app: './src/main.tsx',
             libs: (() => {
-                let dependencies = Object.keys(readPkgUp.sync().pkg.dependencies);
+                let dependencies = Object.keys(pkg.dependencies);
                 return [
                     ...dependencies,
                     'webpack-dev-server/client',
@@ -82,7 +82,7 @@ export = (options: Options = {}) => {
                     'style-loader/lib/urls',
                 ];
             })(),
-            style: ['./src/style.scss'],
+            style: './src/style.scss',
         },
         output: {
             path: buildPath,
