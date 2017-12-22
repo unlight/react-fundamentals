@@ -11,7 +11,6 @@ TODO
 
 DEVELOPMENT
 ---
-```
 ### Environment variables
 * `env_name` environment file
 * `webpack_devtool` webpack devtool option
