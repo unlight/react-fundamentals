@@ -22,10 +22,10 @@ type TRowProps = {
 
 const TRow: React.StatelessComponent<TRowProps> = (props) => {
     return <tr>
-        <td>
+        {/*<td>
             <button className="pt-button pt-icon-delete pt-minimal pt-small"></button>
             <button className="pt-button pt-icon-edit pt-minimal pt-small"></button>
-        </td>
+        </td>*/}
         <td>{props.country.name}</td>
         <td>{props.country.capital}</td>
         <td>{props.country.alpha3Code}</td>
@@ -55,7 +55,7 @@ export class CountryList extends React.Component<CountryListProps, CountryListSt
         return <table className="pt-table pt-condensed pt-striped pt-bordered">
             <thead>
                 <tr>
-                    <th>Actions</th>
+                    {/*<th>Actions</th>*/}
                     <th>Name</th>
                     <th>Capital</th>
                     <th>Code3</th>
