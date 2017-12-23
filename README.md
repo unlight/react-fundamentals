@@ -4,7 +4,6 @@ Example application of reactjs
 
 TODO
 ---
-* https://restcountries.eu/rest/v2/all?fields=name;capital;currencies
 * table of countries
 * more eslint plugins
 * lazy load
@@ -15,6 +14,11 @@ DEVELOPMENT
 ### Environment variables
 * `env_name` environment file
 * `webpack_devtool` webpack devtool option
+
+### Environment Preset 1
+```
+set webpack_devtool=0
+```
 
 REACT EXAMPLE APP
 ---
