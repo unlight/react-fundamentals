@@ -20,12 +20,18 @@ DEVELOPMENT
 set webpack_devtool=0
 ```
 
+RESOURCES
+---
+* https://github.com/NoamELB/react-hot-loader-loader
+
 REACT EXAMPLE APP
 ---
 * https://github.com/coryhouse/react-slingshot
 * https://github.com/markerikson/project-minimek
 * https://github.com/gothinkster/react-redux-realworld-example-app
 * https://github.com/jferrettiboke/react-auth-app-example
+* https://github.com/MikhailSemichev/vote-app
+* https://github.com/UruIT/react-seed
 
 DEBUG
 ---

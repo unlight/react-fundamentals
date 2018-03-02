@@ -2,6 +2,7 @@
 /// <reference path="node_modules/typescript/lib/lib.esnext.d.ts" />
 import * as fs from 'fs';
 import * as Path from 'path';
+import { loader } from 'webpack-loader-helper';
 import pick = require('1-liners/pick');
 const ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -34,11 +35,6 @@ const defaultOptions = {
 
 type Options = Partial<Record<keyof typeof defaultOptions, boolean | string>>;
 
-const loader = (name: string, options: any = {}) => {
-    const loader = name.includes('-loader') ? name : `${name}-loader`;
-    return { loader, options };
-};
-
 export = (options: Options = {}) => {
     options = { ...defaultOptions, ...options };
     Object.keys(options).forEach(key => {
@@ -55,6 +51,7 @@ export = (options: Options = {}) => {
     };
     const packageToTranspile = [
         'pupa',
+        'njct',
         ['1-liners', 'module'].join(Path.sep),
     ];
     const postPlugins = [
@@ -142,7 +139,12 @@ export = (options: Options = {}) => {
                         return Boolean(result);
                     },
                     use: (() => {
-                        const result: any[] = [loader('awesome-typescript', { useTranspileModule: true, isolatedModules: true, transpileOnly: true })];
+                        let tsOptions = { useTranspileModule: true, isolatedModules: true, transpileOnly: true, forceIsolatedModules: true };
+                        if (options.prod) {
+                            tsOptions['target'] = 'es5';
+                        }
+                        let ts = loader('awesome-typescript', tsOptions);
+                        const result: any[] = [ts];
                         if (options.hmr) {
                             result.unshift(loader('react-hot-loader/webpack'));
                         }
