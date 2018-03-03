@@ -4,9 +4,9 @@ Example application of reactjs
 
 TODO
 ---
+* lazy loading (react-loadable)
 * table of countries
 * more eslint plugins
-* lazy load
 
 DEVELOPMENT
 ---
