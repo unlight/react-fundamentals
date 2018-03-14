@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Fragment } from 'react';
 import { inject } from 'njct';
 
 type CountryListProps = {
@@ -18,7 +17,7 @@ type TRowProps = {
         population: number;
         subregion: string;
     }
-}
+};
 
 const TRow: React.StatelessComponent<TRowProps> = (props) => {
     return <tr>
@@ -42,12 +41,10 @@ export class CountryList extends React.Component<CountryListProps, CountryListSt
         this.state = { items: [] };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         const url = 'http://restcountries.eu/rest/v2/all?fields=name;capital;alpha3Code;subregion;population';
-        this.fetch(url)
-            .then(response => response.json())
-            .then(result => this.setState({ items: result }))
-            .catch(err => console.log(err));
+        const result = await this.fetch(url).then(response => response.json());
+        this.setState({ items: result });
     }
 
     render() {
