@@ -1,5 +1,8 @@
 import * as React from 'react';
 import { inject } from 'njct';
+import { TRow } from './table-row';
+import { EventManager } from 'react-eventmanager/lib/EventManager';
+const { eventManager } = require('react-eventmanager') as { eventManager: EventManager };
 
 type CountryListProps = {
     fetch?: typeof fetch;
@@ -9,29 +12,9 @@ type CountryListState = {
     items: any[];
 };
 
-type TRowProps = {
-    country: {
-        name: string;
-        capital: string;
-        alpha3Code: string;
-        population: number;
-        subregion: string;
-    }
-};
-
-const TRow: React.StatelessComponent<TRowProps> = (props) => {
-    return <tr>
-        <td> {/* pt-icon-star pt-disabled */}
-            <button className="pt-button pt-icon-star-empty pt-minimal pt-small"></button>
-        </td>
-        <td>{props.country.name}</td>
-        <td>{props.country.capital}</td>
-        <td>{props.country.alpha3Code}</td>
-        <td>{props.country.population}</td>
-        <td>{props.country.subregion}</td>
-    </tr>;
-};
-
+@eventManager.subscription({
+    SET_ITEMS: 'setItems'
+})
 export class CountryList extends React.Component<CountryListProps, CountryListState> {
 
     private fetch: typeof fetch = inject('fetch', () => window.fetch.bind(window));
@@ -41,10 +24,15 @@ export class CountryList extends React.Component<CountryListProps, CountryListSt
         this.state = { items: [] };
     }
 
+    setItems(items) {
+        this.setState({ items });
+    }
+
     async componentDidMount() {
         const url = 'http://restcountries.eu/rest/v2/all?fields=name;capital;alpha3Code;subregion;population';
         const result = await this.fetch(url).then(response => response.json());
-        this.setState({ items: result });
+        // eventManager.emit('SET_ITEMS', result);
+        eventManager.emitAsync('SET_ITEMS', result);
     }
 
     render() {

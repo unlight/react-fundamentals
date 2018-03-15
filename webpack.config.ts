@@ -65,6 +65,9 @@ export = (options: Options = {}) => {
                 let dependencies = Object.keys(pkg.dependencies);
                 return [
                     ...dependencies,
+                    'react-eventmanager/lib/EventManager',
+                    'es6-eventemitter/lib/EventEmitter',
+                    'tslib/tslib.es6.js',
                     'webpack-dev-server/client',
                     'webpack/hot/emitter',
                     'webpack/hot/log-apply-result',
