@@ -13,6 +13,8 @@ const sourcePath = Path.join(__dirname, 'src');
 const buildPath = Path.join(__dirname, 'dist');
 const context = __dirname;
 
+process['traceDeprecation'] = true;
+
 const defaultOptions = {
     libs: process.argv.indexOf('--env.libs') !== -1,
     style: process.argv.indexOf('--env.style') !== -1,
@@ -31,6 +33,9 @@ const defaultOptions = {
     get devtool(): string {
         return ('webpack_devtool' in process.env) ? process.env.webpack_devtool : 'cheap-source-map';
     },
+    get mode() {
+        return (this.prod) ? 'production' : 'development'
+    }
 };
 
 type Options = Partial<Record<keyof typeof defaultOptions, boolean | string>>;
@@ -58,6 +63,7 @@ export = (options: Options = {}) => {
         require('autoprefixer')({ browsers: 'last 3 versions' }),
     ];
     let config: any = {
+        mode: options.mode,
         context: context,
         entry: {
             app: './src/main.tsx',
@@ -134,23 +140,21 @@ export = (options: Options = {}) => {
         module: {
             exprContextCritical: false,
             rules: [
+                { parser: { amd: false } },
                 {
                     test: function transpileTypeScript(file: string) {
                         if (file.slice(-4) === '.tsx') return true;
-                        // if (file.slice(-3) === '.ts') return true;
+                        if (file.slice(-3) === '.ts') return true;
                         const result = packageToTranspile.find((name: string) => file.indexOf(`node_modules${Path.sep}${name}`) !== -1);
                         return Boolean(result);
                     },
                     use: (() => {
-                        let tsOptions = { useTranspileModule: true, isolatedModules: true, transpileOnly: true, forceIsolatedModules: true };
+                        let tsOptions = { transpileOnly: true };
                         if (options.prod) {
                             tsOptions['target'] = 'es5';
                         }
-                        let ts = loader('awesome-typescript', tsOptions);
+                        let ts = loader('ts', tsOptions);
                         const result: any[] = [ts];
-                        if (options.hmr) {
-                            result.unshift(loader('react-hot-loader/webpack'));
-                        }
                         return result;
                     })(),
                 },
@@ -300,10 +304,9 @@ export = (options: Options = {}) => {
                     // Duck typed plugin, removes dummy.js after extract text plugin.
                     {
                         apply(compiler) {
-                            compiler.plugin('emit', (compilation, callback) => {
+                            compiler.hooks.emit.tap('webpack.config.ts', (compilation) => {
                                 delete compilation.assets['dummy.js'];
                                 delete compilation.assets['dummy.js.map'];
-                                callback();
                             });
                         }
                     }

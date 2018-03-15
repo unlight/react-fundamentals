@@ -33,6 +33,7 @@ export class CountryList extends React.Component<CountryListProps, CountryListSt
         const result = await this.fetch(url).then(response => response.json());
         // eventManager.emit('SET_ITEMS', result);
         eventManager.emitAsync('SET_ITEMS', result);
+        // this.setItems(result);
     }
 
     render() {

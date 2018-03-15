@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { Home } from './home/home';
 import { Profile } from './profile/profile';
 import { withRouter } from 'react-router';
+import { Counter } from './counter/counter';
 
 const HomeButton = withRouter(({ history }) => {
     return (
@@ -30,6 +31,7 @@ export class App extends React.Component<AppProps, any> {
                             {/*<input className="pt-input" placeholder="Search files..." type="text" />*/}
                         </div>
                         <div className="pt-navbar-group pt-align-right">
+                            {/*<Counter/>*/}
                             <HomeButton />
                             <span className="pt-navbar-divider"></span>
                             <UserIconButton />
