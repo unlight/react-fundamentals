@@ -10,7 +10,7 @@ export class Counter extends React.Component<{}, CounterState> {
         super(props);
         this.state = {
             count: 0
-        }
+        };
     }
 
     onClick(e) {
@@ -25,6 +25,6 @@ export class Counter extends React.Component<{}, CounterState> {
                 <strong>{this.state.count}</strong>
                 <button onClick={this.onClick.bind(this)}>Count Up!!</button>
             </div>
-        )
+        );
     }
 }

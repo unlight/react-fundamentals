@@ -13,6 +13,7 @@
     "noImplicitReturns": false,
     "removeComments": false,
     "strictNullChecks": false,
+    "skipLibCheck": true,
     "pretty": true,
     "outDir": "build",
     "lib": [
