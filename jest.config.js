@@ -14,6 +14,9 @@ module.exports = {
         "!src/**/*.spec.ts",
         "!src/**/*.ispec.ts"
     ],
+    "moduleNameMapper": {
+        "react-eventmanager": "react-eventmanager/lib/esm"
+    },
     "testMatch": [
         "<rootDir>/src/**/*.spec.ts",
         "<rootDir>/src/**/*.spec.tsx"
