@@ -4,6 +4,7 @@ import { Home } from './home/home';
 import { Profile } from './profile/profile';
 import { withRouter } from 'react-router';
 import { Counter } from './counter/counter';
+import { Counter2 } from './counter/counter2';
 
 const HomeButton = withRouter(({ history }) => {
     return (
@@ -41,6 +42,7 @@ export class App extends React.Component<AppProps, any> {
                     </nav>
                     <Route exact path="/" component={Home} />
                     <Route path="/profile" component={Profile} />
+                    <Route path="/counter2" component={Counter2} />
                 </div>
             </Router>
         );
