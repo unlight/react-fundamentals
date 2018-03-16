@@ -8,12 +8,11 @@ const ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const pkg = require('./package.json');
 const toBoolean = require('to-boolean');
-
 const sourcePath = Path.join(__dirname, 'src');
 const buildPath = Path.join(__dirname, 'dist');
 const context = __dirname;
 
-process['traceDeprecation'] = true;
+process['traceDeprecation'] = false;
 
 const defaultOptions = {
     libs: process.argv.indexOf('--env.libs') !== -1,
@@ -34,7 +33,7 @@ const defaultOptions = {
         return ('webpack_devtool' in process.env) ? process.env.webpack_devtool : 'cheap-source-map';
     },
     get mode() {
-        return (this.prod) ? 'production' : 'development'
+        return this.prod ? 'production' : 'development';
     }
 };
 
@@ -42,10 +41,9 @@ type Options = Partial<Record<keyof typeof defaultOptions, boolean | string>>;
 
 export = (options: Options = {}) => {
     options = { ...defaultOptions, ...options };
-    Object.keys(options).forEach(key => {
-        const value = options[key];
+    for (const [key, value] of Object.entries(options)) {
         (value === true) ? process.stdout.write(`${key} `) : (value ? process.stdout.write(`${key}:${value} `) : null);
-    });
+    }
     let stats: any = {
         version: false,
         maxModules: 0,
@@ -149,9 +147,9 @@ export = (options: Options = {}) => {
                         return Boolean(result);
                     },
                     use: (() => {
-                        let tsOptions = { transpileOnly: true };
+                        let tsOptions = { transpileOnly: true, compilerOptions: {} };
                         if (options.prod) {
-                            tsOptions['target'] = 'es5';
+                            tsOptions.compilerOptions['target'] = 'es5';
                         }
                         let ts = loader('ts', tsOptions);
                         const result: any[] = [ts];
@@ -210,8 +208,9 @@ export = (options: Options = {}) => {
                 }));
             }
             if (options.minimize) {
-                const UglifyJsPlugin = require('webpack/lib/optimize/UglifyJsPlugin');
-                result.push(new UglifyJsPlugin({ sourceMap: true, comments: false }));
+                const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+                const uglifyOptions = { };
+                result.push(new UglifyJsPlugin({ sourceMap: true, uglifyOptions }));
             }
             if (options.prod) {
                 const ModuleConcatenationPlugin = require('webpack/lib/optimize/ModuleConcatenationPlugin');
