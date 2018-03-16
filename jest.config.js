@@ -10,10 +10,14 @@ module.exports = {
         "text",
     ],
     "collectCoverageFrom": [
+        "src/**/*.tsx",
         "src/**/*.ts",
         "!src/**/*.spec.ts",
-        "!src/**/*.ispec.ts"
+        "!src/**/*.spec.tsx",
     ],
+    "moduleNameMapper": {
+        "react-eventmanager": "react-eventmanager/lib/esm"
+    },
     "testMatch": [
         "<rootDir>/src/**/*.spec.ts",
         "<rootDir>/src/**/*.spec.tsx"

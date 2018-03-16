@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "esnext",
+    "target": "es2018",
     "jsx": "react",
     "module": "commonjs",
     "importHelpers": true,
@@ -13,10 +13,10 @@
     "noImplicitReturns": false,
     "removeComments": false,
     "strictNullChecks": false,
-    "pretty": true,
-    "outDir": "build",
+    "skipLibCheck": true,
+    "outDir": "dist",
     "lib": [
-      "es7",
+      "es2018",
       "dom"
     ]
   },

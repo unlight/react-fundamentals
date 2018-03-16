@@ -8,10 +8,11 @@ const ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const pkg = require('./package.json');
 const toBoolean = require('to-boolean');
-
 const sourcePath = Path.join(__dirname, 'src');
 const buildPath = Path.join(__dirname, 'dist');
 const context = __dirname;
+
+process['traceDeprecation'] = false;
 
 const defaultOptions = {
     libs: process.argv.indexOf('--env.libs') !== -1,
@@ -31,16 +32,18 @@ const defaultOptions = {
     get devtool(): string {
         return ('webpack_devtool' in process.env) ? process.env.webpack_devtool : 'cheap-source-map';
     },
+    get mode() {
+        return this.prod ? 'production' : 'development';
+    }
 };
 
 type Options = Partial<Record<keyof typeof defaultOptions, boolean | string>>;
 
 export = (options: Options = {}) => {
     options = { ...defaultOptions, ...options };
-    Object.keys(options).forEach(key => {
-        const value = options[key];
+    for (const [key, value] of Object.entries(options)) {
         (value === true) ? process.stdout.write(`${key} `) : (value ? process.stdout.write(`${key}:${value} `) : null);
-    });
+    }
     let stats: any = {
         version: false,
         maxModules: 0,
@@ -58,6 +61,7 @@ export = (options: Options = {}) => {
         require('autoprefixer')({ browsers: 'last 3 versions' }),
     ];
     let config: any = {
+        mode: options.mode,
         context: context,
         entry: {
             app: './src/main.tsx',
@@ -134,23 +138,21 @@ export = (options: Options = {}) => {
         module: {
             exprContextCritical: false,
             rules: [
+                { parser: { amd: false } },
                 {
                     test: function transpileTypeScript(file: string) {
                         if (file.slice(-4) === '.tsx') return true;
-                        // if (file.slice(-3) === '.ts') return true;
+                        if (file.slice(-3) === '.ts') return true;
                         const result = packageToTranspile.find((name: string) => file.indexOf(`node_modules${Path.sep}${name}`) !== -1);
                         return Boolean(result);
                     },
                     use: (() => {
-                        let tsOptions = { useTranspileModule: true, isolatedModules: true, transpileOnly: true, forceIsolatedModules: true };
+                        let tsOptions = { transpileOnly: true, compilerOptions: {} };
                         if (options.prod) {
-                            tsOptions['target'] = 'es5';
+                            tsOptions.compilerOptions['target'] = 'es5';
                         }
-                        let ts = loader('awesome-typescript', tsOptions);
+                        let ts = loader('ts', tsOptions);
                         const result: any[] = [ts];
-                        if (options.hmr) {
-                            result.unshift(loader('react-hot-loader/webpack'));
-                        }
                         return result;
                     })(),
                 },
@@ -206,8 +208,9 @@ export = (options: Options = {}) => {
                 }));
             }
             if (options.minimize) {
-                const UglifyJsPlugin = require('webpack/lib/optimize/UglifyJsPlugin');
-                result.push(new UglifyJsPlugin({ sourceMap: true, comments: false }));
+                const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+                const uglifyOptions = { };
+                result.push(new UglifyJsPlugin({ sourceMap: true, uglifyOptions }));
             }
             if (options.prod) {
                 const ModuleConcatenationPlugin = require('webpack/lib/optimize/ModuleConcatenationPlugin');
@@ -300,10 +303,9 @@ export = (options: Options = {}) => {
                     // Duck typed plugin, removes dummy.js after extract text plugin.
                     {
                         apply(compiler) {
-                            compiler.plugin('emit', (compilation, callback) => {
+                            compiler.hooks.emit.tap('webpack.config.ts', (compilation) => {
                                 delete compilation.assets['dummy.js'];
                                 delete compilation.assets['dummy.js.map'];
-                                callback();
                             });
                         }
                     }

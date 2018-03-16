@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { inject } from 'njct';
 import { TRow } from './table-row';
-import { EventManager } from 'react-eventmanager/lib/EventManager';
-const { eventManager } = require('react-eventmanager') as { eventManager: EventManager };
+import eventManager from 'react-eventmanager/lib/EventManager';
 
 type CountryListProps = {
     fetch?: typeof fetch;
@@ -33,6 +32,7 @@ export class CountryList extends React.Component<CountryListProps, CountryListSt
         const result = await this.fetch(url).then(response => response.json());
         // eventManager.emit('SET_ITEMS', result);
         eventManager.emitAsync('SET_ITEMS', result);
+        // this.setItems(result);
     }
 
     render() {
