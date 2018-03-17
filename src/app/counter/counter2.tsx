@@ -65,6 +65,11 @@ function Method(): MethodDecorator {
     }
 }
 
+function Ref(): PropertyDecorator {
+    return function(prototype: Object, property: string) {
+    }
+}
+
 @Component()
 export class Counter2 extends React.Component<{}, { count: number }> {
 

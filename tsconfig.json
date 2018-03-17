@@ -5,7 +5,7 @@
     "module": "commonjs",
     "importHelpers": true,
     "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
+    "emitDecoratorMetadata": false,
     "experimentalDecorators": true,
     "sourceMap": true,
     "declaration": false,
