@@ -55,6 +55,7 @@ export = (options: Options = {}) => {
     const packageToTranspile = [
         'pupa',
         'njct',
+        'react-eventmanager',
         ['1-liners', 'module'].join(Path.sep),
     ];
     const postPlugins = [
