@@ -6,6 +6,7 @@ import { withRouter } from 'react-router';
 import { Counter } from './counter/counter';
 import { Counter2 } from './counter/counter2';
 import { Counter2Demo } from './counter/counter2-demo';
+import { RandomUserContainer } from './randomuser/randomuser.container';
 
 const HomeButton = withRouter(({ history }) => {
     return (
@@ -44,6 +45,7 @@ export class App extends React.Component<AppProps, any> {
                     <Route exact path="/" component={Home} />
                     <Route path="/profile" component={Profile} />
                     <Route path="/counter2" component={Counter2Demo} />
+                    <Route path="/randomuser" component={RandomUserContainer} />
                 </div>
             </Router>
         );
