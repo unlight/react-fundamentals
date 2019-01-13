@@ -13,7 +13,7 @@ type TRowProps = {
 export const TRow: React.StatelessComponent<TRowProps> = (props) => {
     return <tr>
         <td> {/* pt-icon-star pt-disabled */}
-            <button className="pt-button pt-icon-star-empty pt-minimal pt-small"></button>
+            <button className="bp3-button pt-icon-star-empty pt-minimal pt-small"></button>
         </td>
         <td>{props.country.name}</td>
         <td>{props.country.capital}</td>
