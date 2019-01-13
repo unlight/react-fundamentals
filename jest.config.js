@@ -2,7 +2,7 @@
 module.exports = {
     "verbose": false,
     "transform": {
-        "^.+\\.tsx?$": "./node_modules/ts-jest/preprocessor.js"
+        "^.+\\.tsx?$": "ts-jest"
     },
     "collectCoverage": false,
     "coverageDirectory": "~testresults",
@@ -17,7 +17,6 @@ module.exports = {
         "!src/**/*.spec.tsx",
     ],
     "moduleNameMapper": {
-        "react-eventmanager": "react-eventmanager/lib/esm"
     },
     "testMatch": [
         "<rootDir>/src/**/*.spec.ts",

@@ -4,7 +4,7 @@ import { RandomUserComponent } from './randomuser.component';
 export class RandomUserContainer extends React.Component<any, any> {
 
     readonly state = {
-        user: null,
+        user: null as any,
     }
 
     async componentDidMount() {

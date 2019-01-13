@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { inject } from 'njct';
 import { TRow } from './table-row';
-import eventManager from 'react-eventmanager/lib/EventManager';
 
 type CountryListProps = {
     fetch?: typeof fetch;
@@ -11,17 +10,10 @@ type CountryListState = {
     items: any[];
 };
 
-@eventManager.subscription({
-    SET_ITEMS: 'setItems'
-})
 export class CountryList extends React.Component<CountryListProps, CountryListState> {
 
     private fetch: typeof fetch = inject('fetch', () => window.fetch.bind(window));
-
-    constructor(props) {
-        super(props);
-        this.state = { items: [] };
-    }
+    readonly state = { items: [] };
 
     setItems(items) {
         this.setState({ items });
@@ -30,9 +22,7 @@ export class CountryList extends React.Component<CountryListProps, CountryListSt
     async componentDidMount() {
         const url = 'http://restcountries.eu/rest/v2/all?fields=name;capital;alpha3Code;subregion;population';
         const result = await this.fetch(url).then(response => response.json());
-        // eventManager.emit('SET_ITEMS', result);
-        eventManager.emitAsync('SET_ITEMS', result);
-        // this.setItems(result);
+        this.setItems(result);
     }
 
     render() {

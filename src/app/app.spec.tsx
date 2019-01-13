@@ -8,14 +8,14 @@ test('smoke', () => {
     expect(component).toBeTruthy();
 });
 
-test('renderer', () => {
-    const component = renderer.create(<App title="foo" />);
-    expect(component).toBeTruthy();
-    // const { props } = component.toJSON();
-});
+// test('renderer', () => {
+//     const component = renderer.create(<App title="foo" />);
+//     expect(component).toBeTruthy();
+//     // const { props } = component.toJSON();
+// });
 
-test('renderer', () => {
-    const renderer = new ReactShallowRenderer();
-    renderer.render(<App title="foo" />);
-    const result = renderer.getRenderOutput();
-});
+// test('renderer', () => {
+//     const renderer = new ReactShallowRenderer();
+//     renderer.render(<App title="foo" />);
+//     const result = renderer.getRenderOutput();
+// });
