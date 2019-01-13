@@ -6,14 +6,12 @@ type CountryListProps = {
     fetch?: typeof fetch;
 };
 
-type CountryListState = {
-    items: any[];
-};
-
-export class CountryList extends React.Component<CountryListProps, CountryListState> {
+export class CountryList extends React.Component<CountryListProps> {
 
     private fetch: typeof fetch = inject('fetch', () => window.fetch.bind(window));
-    readonly state = { items: [] };
+    readonly state = {
+        items: [] as any[],
+    };
 
     setItems(items) {
         this.setState({ items });

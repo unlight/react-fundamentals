@@ -27,7 +27,7 @@ const defaultOptions = {
     get minimize(): boolean {
         return (process.argv.indexOf('--env.nomin') !== -1) ? false : this.prod;
     },
-    get devtool(): string {
+    get devtool(): any {
         return ('webpack_devtool' in process.env) ? process.env.webpack_devtool : 'cheap-source-map';
     },
     get sourceMap(): boolean {
@@ -154,7 +154,7 @@ export = (options: ConfigOptions = {}) => {
             }
         ] : []),
     ];
-    let config: webpack.Configuration = {
+    let config: any = { // webpack.Configuration
         mode: options.mode,
         context: context,
         entry: {

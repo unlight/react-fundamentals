@@ -46,7 +46,7 @@ node --inspect node_modules/webpack-dev-server/bin/webpack-dev-server --hot --in
 
 ## TODO
 * ts-jest transpile only
-* remove jest
+* jest mock
 * lazy loading (react-loadable)
 * table of countries
 * more eslint plugins
