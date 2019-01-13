@@ -1,10 +1,15 @@
 import * as React from 'react';
 import { CountryList } from './country-list/country-list';
 
-export class Home extends React.Component<any, any> {
+const defaultProps = {
+    CountryList: CountryList,
+};
+
+export class Home extends React.Component<typeof defaultProps, any> {
+
+    static defaultProps = defaultProps;
 
     render() {
-        return <CountryList>
-        </CountryList>;
+        return <this.props.CountryList />;
     }
 }

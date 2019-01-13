@@ -24,7 +24,7 @@ export class CountryList extends React.Component<CountryListProps> {
     }
 
     render() {
-        return <table className="pt-table pt-condensed pt-striped pt-bordered">
+        return <table className="bp3-html-table bp3-html-table-condensed bp3-html-table-striped bp3-html-table-bordered">
             <thead>
                 <tr>
                     <th></th>
