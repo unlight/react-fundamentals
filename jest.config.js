@@ -1,10 +1,11 @@
+/* eslint-disable */
 module.exports = {
     "verbose": false,
     "transform": {
         "^.+\\.tsx?$": "./node_modules/ts-jest/preprocessor.js"
     },
     "collectCoverage": false,
-    "coverageDirectory": ".testresults",
+    "coverageDirectory": "~testresults",
     "coverageReporters": [
         "lcov",
         "text",

@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2018",
+    "target": "es2017",
     "jsx": "react",
     "module": "commonjs",
     "importHelpers": true,
@@ -9,18 +9,21 @@
     "experimentalDecorators": true,
     "sourceMap": true,
     "declaration": false,
+    "strict": true,
     "noImplicitAny": false,
     "noImplicitReturns": false,
     "removeComments": false,
-    "strictNullChecks": false,
     "skipLibCheck": true,
     "outDir": "dist",
     "lib": [
-      "es2018",
+      "esnext",
       "dom"
     ]
   },
   "include": [
     "src/**/*.tsx"
+  ],
+  "exclude": [
+    "src/**/*.spec.tsx"
   ]
 }

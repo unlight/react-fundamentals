@@ -1,28 +1,3 @@
-const { rules: tslintRulesRecommended } = require('tslint/lib/configs/recommended');
-const tslintRules = Object.assign({}, tslintRulesRecommended, {
-    "member-access": false,
-    "ordered-imports": false,
-    "quotemark": false,
-    "no-var-keyword": false,
-    "object-literal-sort-keys": false,
-    "no-console": false,
-    "arrow-parens": false,
-    "max-line-length": false,
-    "object-literal-key-quotes": false,
-    "no-shadowed-variable": false,
-    "only-arrow-functions": false,
-    "no-var-requires": false,
-    "semicolon": false,
-    "no-empty": false,
-    "interface-over-type-literal": false,
-    "no-debugger": false,
-    "trailing-comma": false,
-    "whitespace": false,
-    "no-angle-bracket-type-assertion": false,
-    "align": false,
-    "no-unused-expression": false,
-});
-
 module.exports = {
     "env": {
         "browser": true,
@@ -32,11 +7,12 @@ module.exports = {
     },
     "parser": "typescript-eslint-parser",
     "parserOptions": {
-        "ecmaFeatures": {
+        "ecmaVersion": 2017,
+        "sourceType": "module",
+        'ecmaFeatures': {
             "experimentalObjectRestSpread": true,
-            "jsx": true
+            "jsx": true,
         },
-        "sourceType": "module"
     },
     "extends": [
         "eslint:recommended",
@@ -53,10 +29,6 @@ module.exports = {
         "tslint",
     ],
     "rules": {
-        "tslint/config": [1, {
-            rules: tslintRules,
-            rulesDirectory: ["node_modules/tslint/lib/rules"],
-        }],
         "no-undef": 0,
         "no-unused-vars": 0,
         "no-console": 1,
@@ -70,5 +42,9 @@ module.exports = {
         "quotes": [1, "single", { "allowTemplateLiterals": true }],
         "semi": [1, "always"],
         "react/prop-types": 0,
+        'tslint/config': [1, {
+            configFile: 'tsconfig.json',
+            lintFile: './tslint.json',
+        }],
     }
 };

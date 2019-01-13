@@ -1,15 +1,14 @@
-# react-fundamentals
+# react-typescript-starter
 Based on react-redux-typescript-boilerplate
 Example application of reactjs
 
-TODO
----
+## TODO
 * lazy loading (react-loadable)
 * table of countries
 * more eslint plugins
 
-DEVELOPMENT
----
+## DEVELOPMENT
+
 ### Environment variables
 * `env_name` environment file
 * `webpack_devtool` webpack devtool option
@@ -19,12 +18,10 @@ DEVELOPMENT
 set webpack_devtool=0
 ```
 
-RESOURCES
----
+## RESOURCES
 * https://github.com/NoamELB/react-hot-loader-loader
 
-REACT EXAMPLE APP
----
+## REACT EXAMPLE APP
 * https://github.com/coryhouse/react-slingshot
 * https://github.com/markerikson/project-minimek
 * https://github.com/gothinkster/react-redux-realworld-example-app
@@ -32,8 +29,7 @@ REACT EXAMPLE APP
 * https://github.com/MikhailSemichev/vote-app
 * https://github.com/UruIT/react-seed
 
-DEBUG
----
+## DEBUG
 ```
 node --inspect node_modules\webpack\bin\webpack.js --env.libs --progress
 node --inspect node_modules/webpack-dev-server/bin/webpack-dev-server --hot --inline

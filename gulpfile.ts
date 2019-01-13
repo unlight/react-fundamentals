@@ -1,15 +1,50 @@
-/// <reference types="node" />
 /// <reference path="node_modules/typescript/lib/lib.esnext.d.ts" />
-import * as fs from 'fs';
-import * as Path from 'path';
-import del = require('del');
-import changed = require('is-changed');
 import gulp = require('gulp');
-const glob = require('glob');
+import changed = require('is-changed');
 const g = require('gulp-load-plugins')();
-const spawn = require('cross-spawn');
+import log = require('fancy-log');
+import execa = require('execa');
+import glob = require('glob');
+import { existsSync } from 'fs';
+import { join, resolve } from 'path';
+import rimraf = require('rimraf');
 
-const buildPath = Path.join(__dirname, 'dist');
+const buildPath = join(__dirname, 'dist');
+
+gulp.task('build:libs', async () => {
+    const libsChanged = changed.dependencies(resolve(buildPath, '.libs.dat'));
+    if (!libsChanged.result && existsSync(`${buildPath}/libs.json`) && existsSync(`${buildPath}/libs.js`)) {
+        return;
+    }
+    if (libsChanged.diff) {
+        for (const [pkname, version] of Object.entries(libsChanged.diff)) {
+            log(`${pkname} ${(version.$set)}`);
+        }
+    }
+    log(('Need npm install'));
+    await execa('npm', ['install'], { stdio: 'inherit' });
+    log(('Rebuilding npm libs'));
+    await execa('npm', ['run', 'build:libs'], { stdio: 'inherit', env: { 'TS_NODE_TRANSPILE_ONLY': '1' } });
+    libsChanged.update();
+});
+
+// Builds style for development only.
+gulp.task('build:style', async () => {
+    const styleChanged = changed.file(`src/style.scss`, resolve(buildPath, '.style.dat'));
+    if (styleChanged.result) {
+        rimraf.sync(`${buildPath}/style.css`);
+    }
+    let [style] = glob.sync(`${buildPath}/style.css`);
+    if (!style) {
+        await execa('npm', ['run', 'build:style'], { stdio: 'inherit', env: { 'TS_NODE_TRANSPILE_ONLY': '1' } });
+        styleChanged.update();
+    }
+});
+
+gulp.task('preserver', gulp.series(...[
+    'build:libs',
+    'build:style',
+]));
 
 function sourceLint() {
     return g.eslint();
@@ -18,79 +53,42 @@ function sourceLint() {
 function specLint() {
     return g.eslint({
         rules: {
+            'no-unused-vars': 0,
+            'no-underscore-dangle': 0,
+            'max-nested-callbacks': 0,
+            'function-paren-newline': 0,
+            'jasmine/no-spec-dupes': 0,
+            'lodash/import-scope': 0,
             'prefer-const': 0,
             'prefer-destructuring': 0,
             'import/no-duplicates': 0,
             'import/max-dependencies': 0,
+            'tsc/config': 0,
+            'tslint/config': 0,
         }
     });
 }
 
-gulp.task('clean', () => {
-    return del([buildPath, '.testresults']);
-});
-
 gulp.task('eslint', () => {
-    return gulp.src('src/**/*.tsx', { since: g.memoryCache.lastMtime('source') })
+    return gulp.src('src/**/*.ts', { since: g.memoryCache.lastMtime('source') })
         .pipe(g.memoryCache('source'))
-        .pipe(g.if('*.spec.tsx', specLint(), sourceLint()))
+        .pipe(g.ignore.exclude('*.d.ts'))
+        .pipe(g.if('*.spec.ts', specLint(), sourceLint()))
         .pipe(g.eslint.format());
 });
 
 gulp.task('eslint:w', (done) => {
-    let w = gulp.watch('src/**/*.tsx', { ignoreInitial: false }, gulp.series('eslint'));
+    const w = gulp.watch('src/**/*.ts', { ignoreInitial: false }, gulp.series('eslint'));
     w.on('change', g.memoryCache.update('source'));
+    w.on('unlink', file => g.memoryCache.forget('source', file, file => resolve(file)));
     process.on('SIGINT', () => {
         w.close();
         done();
     });
 });
 
-gulp.task('build:libs', async () => {
-    const libsChanged = changed.dependencies(Path.resolve(buildPath, '.libs.dat'));
-    if (!libsChanged.result && fs.existsSync(`${buildPath}/libs.json`) && fs.existsSync(`${buildPath}/libs.js`)) {
-        return Promise.resolve();
-    } else if (libsChanged.diff) {
-        const diff = libsChanged.diff;
-        Object.keys(diff).forEach(pkname => {
-            const version = diff[pkname].$set;
-            g.util.log(`${pkname} ${g.util.colors.cyan(version)}`);
-        });
-    }
-    await new Promise((resolve, reject) => {
-        g.util.log(g.util.colors.yellow('Need npm install'));
-        const proc = spawn('npm', ['install'], { stdio: 'inherit' });
-        proc.on('error', reject);
-        proc.once('exit', resolve);
-    });
-    g.util.log(g.util.colors.yellow('Rebuilding npm libs'));
-    return new Promise((resolve, reject) => {
-        const proc = spawn('npm', ['run', 'build:libs'], { stdio: 'inherit' });
-        proc.on('error', reject);
-        proc.once('exit', () => {
-            libsChanged.update();
-            resolve();
-        });
-    });
+gulp.task('clean', (done) => {
+    rimraf.sync('~testresults');
+    rimraf.sync(buildPath);
+    done();
 });
-
-// Builds style for development only.
-gulp.task('build:style', (done) => {
-    const styleChanged = changed.file(`src/style.scss`, Path.resolve(buildPath, '.style.dat'));
-    if (styleChanged.result) {
-        del.sync(`${buildPath}/style.css`);
-    }
-    let [style] = glob.sync(`${buildPath}/style.css`);
-    if (!style) {
-        const proc = spawn('npm', ['run', 'build:style'], { stdio: 'inherit' });
-        proc.on('error', done);
-        proc.once('exit', () => {
-            styleChanged.update();
-            done();
-        });
-    } else {
-        done();
-    }
-});
-
-gulp.task('server:prestart', gulp.series('build:libs', 'build:style'));

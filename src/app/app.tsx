@@ -46,6 +46,7 @@ export class App extends React.Component<AppProps, any> {
                     <Route path="/profile" component={Profile} />
                     <Route path="/counter2" component={Counter2Demo} />
                     <Route path="/randomuser" component={RandomUserContainer} />
+                    <Route path="/randomuser2" render={props => <RandomUserContainer x={1} />} />
                 </div>
             </Router>
         );
